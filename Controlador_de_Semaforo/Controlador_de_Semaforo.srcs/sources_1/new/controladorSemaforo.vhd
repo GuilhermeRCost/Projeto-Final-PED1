@@ -34,45 +34,49 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity controladorSemaforo is
     Port ( CLK: in STD_LOGIC;
            Vs : in STD_LOGIC;
-           TL : in STD_LOGIC;
-           Ts : in STD_LOGIC;
            Mg : out STD_LOGIC;
            My : out STD_LOGIC;
            Mr : out STD_LOGIC;
            Sg : out STD_LOGIC;
            Sy : out STD_LOGIC;
-           Sr : out STD_LOGIC);
+           Sr : out STD_LOGIC;
+           Clk_out: out std_logic );
 end controladorSemaforo;
 
 architecture Behavioral of controladorSemaforo is
     --instanciando componentes
-    component LogicaSequencial
-        Port ( Vs : in STD_LOGIC;
-               CLKin : in STD_LOGIC;
-               TL : in STD_LOGIC;
-               Ts : in STD_LOGIC;
-               G : out STD_LOGIC_VECTOR (0 to 1));
-        end component;
-    component DecodificadorGray
-        Port ( G : in STD_LOGIC_VECTOR (0 to 1);
-               S : out STD_LOGIC_VECTOR (0 to 3));
+    component Clock_25s
+        Port ( CLK_in : in STD_LOGIC;
+               CLK_out : out STD_LOGIC;
+               Tl: out std_logic );
+    end component ;
+    
+    component Clock_5s
+        Port ( CLK_in : in STD_LOGIC;
+               CLK_out : out STD_LOGIC;
+               Ts: out std_logic );
+    end component ;
+    
+    component Maquina_de_Estados
+        Port ( CLK: in STD_LOGIC;
+               tl: in std_logic ;
+               ts: in std_logic ;
+               Vs : in STD_LOGIC;
+               Mg : out STD_LOGIC;
+               My : out STD_LOGIC;
+               Mr : out STD_LOGIC;
+               Sg : out STD_LOGIC;
+               Sy : out STD_LOGIC;
+               Sr : out STD_LOGIC);
     end component;
-    component DivisorDeFrequencia
-        Port ( CLKin : in STD_LOGIC;
-               CLKout : out STD_LOGIC);
-    end component;
-    component Seletor
-        Port ( S1 : in STD_LOGIC;
-               S3 : in STD_LOGIC;
-               TL : out STD_LOGIC;
-               Ts : out STD_LOGIC);
-    end component;
-    component Timer
-        Port ( CLK : in STD_LOGIC;
-               TL : out STD_LOGIC;
-               Ts : out STD_LOGIC);
-    end component;
+    
+    --sinais
+    signal sTs, sTl,clk5,clk25: std_logic ;
 begin
-
-
+    Clock_curto: Clock_5s port map (CLK_in => Clk, CLK_out =>clk5, Ts => sTs);
+    Clock_longo: Clock_25s port map (CLK_in => Clk, CLK_out =>clk25, Tl => sTl);
+    MaquinaEstados: Maquina_de_Estados port map(CLK => clk, tl => sTl, ts => sTs, vS => Vs, 
+                                                    Mg => Mg, My => My, Mr => Mr, 
+                                                    Sg => Sg, Sy => sy, Sr => Sr);
+    Clk_out <= Clk5;
 end Behavioral;

@@ -33,6 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Maquina_de_Estados is
     Port ( CLK: in STD_LOGIC;
+           tl: in std_logic ;
+           ts: in std_logic ;
            Vs : in STD_LOGIC;
            Mg : out STD_LOGIC;
            My : out STD_LOGIC;
@@ -44,14 +46,10 @@ end Maquina_de_Estados;
 
 architecture Behavioral of Maquina_de_Estados is
     type state is (e1, e2,e3, e4);
-    signal Ts, Tl : std_logic ;
     signal sM, sS: std_logic_vector (0 to 2) ;
     signal cState, nextState: state;
     
-    --sinais para o clock
-   -- signal clk_5s, clk_25s : std_logic := '0' ;
-   -- signal prescaler5 : integer range 0 to 500_000_000 := 500_000_000; 
-   -- signal counter5 : integer range 1 to 500_000_000 := 1;
+    
 begin
     Mg <= sM(0);
     My <= sM(1);
@@ -61,61 +59,60 @@ begin
     Sy <= sS(1);
     Sr <= sS(2);
     
-    DecodificaEstado: process(cstate, sM, sS)
-    begin
-        case cState is
-          when  e1 =>
-               sM <= "100"; --verde
-               sS <= "001";  --vermelho
-               
-          when  e2 =>
-               sM <= "010"; --amarelo
-               sS <= "001"; --vermelho
-          when  e3 =>
-               SM <= "001"; --vermelho
-               sS <= "100"; --verde
-          when  e4 =>
-               sM <= "001"; --vermelho
-               sS <= "010"; --amarelo
-       end case;
-    end process;
+    --atribuindo valor as saidas
+      with cState  select
+          sM <= "100" when e1,  --verde
+                "010" when e2,  --amarelo
+                "001" when e3,  --vermelho
+                "001" when e4,  --vermelho
+                "000" when others ; 
+     with cState  select 
+          sS <=  "001" when e1, --vermelho
+                 "001" when e2, --vermelho
+                 "100" when e3, --verde
+                 "010" when e4, --amarelo
+                 "000" when others;  --vermelho
     
     
     
-    armazena_estado: process(clk)
-    begin
-       if (rising_edge(clk)) then
-           cState <= nextState;
-       end if;
-    end process;
-    
-     transicao_estado: process(cstate, vs, tl, ts)
-          begin
-              case cstate is
-               when e1 => 
-                    if (VS ='1' and tl ='0') then
+ 
+    --transi??o de estados
+        armazena_estado: process(clk, vS, cstate, nextState)
+        begin
+           
+               if ( rising_edge(clk) ) then
+                   cState <= nextState;
+               end if;  
+        end process;
+        
+         transicao_estado: process(cstate, Vs)
+              begin
+                  case cstate is
+                   when e1 => 
+                      if (Tl ='1' and Vs ='0')   then --looping
+                        nextState <= e1;
+                      else
                         nextState <= e2;
-                    else
-                        nextState <= e1;    
-                    end if; 
-               when e2 =>
-                    if ( ts ='0') then
+                      end if;
+                   when e2 =>
+                       if ts ='0' then
+                            nextState <= e3;
+                       else  
+                            nextState <= e2;   
+                       end if;
+                        
+                   when e3 =>
+                      if (Tl ='1' and Vs ='1')   then --looping
                        nextState <= e3;
-                   else
-                       nextState <= e2;    
-                   end if;
-               when e3 =>
-                    if (VS ='0' or tl ='0') then
+                     else
                        nextState <= e4;
-                    else
-                       nextState <= e3;    
-                    end if;
-               when e4 =>
-                    if (ts ='0') then
-                       nextState <= e2;
-                   else
-                       nextState <= e1;    
-                   end if;
-              end case;
-          end process;
+                     end if;
+                   when e4 =>
+                       if tl ='0' then
+                           nextState <= e1;
+                      else  
+                           nextState <= e4;   
+                      end if;  
+                   end case;
+              end process;
 end Behavioral;

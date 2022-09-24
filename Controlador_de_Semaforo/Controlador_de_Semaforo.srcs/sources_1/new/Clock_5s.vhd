@@ -33,12 +33,13 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Clock_5s is
     Port ( CLK_in : in STD_LOGIC;
-           CLK_out : out STD_LOGIC);
+           CLK_out : out STD_LOGIC;
+           Ts: out std_logic );
 end Clock_5s;
 
 architecture Behavioral of Clock_5s is
-    signal prescaler : integer range 0 to 500_000_000 := 500_000_000; 
-    signal counter : integer range 1 to 500_000_000 := 1; 
+    signal prescaler : integer range 0 to 250_000_000 := 250_000_000; 
+    signal counter : integer range 1 to 250_000_000 := 1; 
     signal newClock : std_logic := '0'; 
 begin
     clkDivisor : process(clk_in) 
@@ -47,7 +48,9 @@ begin
                   if counter = prescaler then 
                       counter <= 1; 
                       newClock <= not newClock; 
+                      Ts <= '0';
                   else 
+                      Ts <= '1';
                       counter <= counter + 1; 
                   end if; 
               end if; 

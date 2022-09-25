@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: UnB -FGA
+-- Engineer: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
 -- 
 -- Create Date: 20.09.2022 11:57:51
 -- Design Name: 
@@ -40,22 +40,33 @@ end Clock_25s;
 
 architecture Behavioral of Clock_25s is
     signal prescaler : integer range 0 to 1250_000_000 := 1250_000_000; 
-    signal counter : integer range 1 to 1250_000_000 := 1; 
-    signal newClock : std_logic := '0'; 
+    signal counter, counter2 : integer range 1 to 1250_000_000 := 1; 
+    signal newClock, srst : std_logic := '0'; 
 begin
+    resetando: process(rst)
+    begin
+       srst <= rst;
+    end process ;
+    
     COntagem1 : process(clk_in) 
           begin 
               if rising_edge(clk_in) then 
-                   if rst ='1' then
+                   if srst ='1' then
                       newClock <= '0';
                       counter <= 1; 
-                   elsif (counter = prescaler) then 
-                      counter <= 1; 
-                      newClock <= not newClock;
-                      tl <='0';
-                  else 
-                        Counter <= counter +1; 
-                        Tl <='1';
+                      counter2 <= 1;
+                      Tl <= '1';
+                   elsif not(counter = prescaler) then 
+                      counter <= counter +1;
+                      tl <= '1';
+                  elsif counter2 = prescaler then 
+                        Counter <= 1; 
+                        Counter2 <= 1; 
+                        newClock <= not newClock;
+                        Tl <='0';
+                  else
+                        counter2 <= counter2 +1;
+                        tl <= '1';
                   end if; 
               end if; 
           end process;

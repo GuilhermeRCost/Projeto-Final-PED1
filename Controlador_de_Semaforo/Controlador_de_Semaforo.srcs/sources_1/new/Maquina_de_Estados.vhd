@@ -3,7 +3,7 @@
 -- Engineer: 
 -- 
 -- Create Date: 14.09.2022 14:05:56
--- Design Name: 
+-- Design Name: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
 -- Module Name: Maquina_de_Estados - Behavioral
 -- Project Name: 
 -- Target Devices: 
@@ -48,7 +48,7 @@ end Maquina_de_Estados;
 architecture Behavioral of Maquina_de_Estados is
     type state is (e1, e2,e3, e4);
     signal sM, sS: std_logic_vector (0 to 2) ;
-    signal cState, nextState: state;
+    signal cState, nextState: state := e1;
     
     
 begin
@@ -86,27 +86,28 @@ begin
                end if;  
         end process;
         
-         transicao_estado: process(cstate, Vs)
+         transicao_estado: process(cstate, Vs, tl)
               begin
                   case cstate is
                    when e1 => 
                       if (Tl ='1' and Vs ='0')   then --looping
-                        nextState <= e1;
-                        reset <= '1';
-                      else
                         reset <= '0';
+                        nextState <= e1;
+                      else  
+                        reset <= '1';
                         nextState <= e2;
                       end if;
                    when e2 =>
                        if ts ='0' then
-                            reset <= '1';
+                             reset <='1';
                             nextState <= e3;
                        else  
-                            reset <= '0';
+                             reset <='0';
                             nextState <= e2;   
                        end if;
                         
                    when e3 =>
+                   --Resetando o clock para os novos estados
                       if (Tl ='1' and Vs ='1')   then --looping
                        reset <= '0';
                        nextState <= e3;
@@ -115,7 +116,7 @@ begin
                        nextState <= e4;
                      end if;
                    when e4 =>
-                       if tl ='0' then
+                       if ts ='0' then
                            reset <= '1';
                            nextState <= e1;
                       else 

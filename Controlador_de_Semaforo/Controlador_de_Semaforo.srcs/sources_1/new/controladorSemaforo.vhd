@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company:   UnB -FGA
+-- Engineer: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
 -- 
 -- Create Date: 06.09.2022 08:31:23
 -- Design Name: 
@@ -78,7 +78,7 @@ architecture Behavioral of controladorSemaforo is
 begin
     Clock_curto: Clock_5s port map (CLK_in => Clk, Rst => sRst, CLK_out =>clk5, Ts => sTs);
     Clock_longo: Clock_25s port map (CLK_in => Clk, Rst => sRst, CLK_out =>clk25, Tl => sTl);
-    MaquinaEstados: Maquina_de_Estados port map(CLK => clk5, tl => sTl, ts => sTs, vS => Vs, 
+    MaquinaEstados: Maquina_de_Estados port map(CLK => clk, tl => sTl, ts => sTs, vS => Vs, 
                                                     Mg => Mg, My => My, Mr => Mr, 
                                                     Sg => Sg, Sy => sy, Sr => Sr, reset => sRst);
     Clk_out <= Clk5;

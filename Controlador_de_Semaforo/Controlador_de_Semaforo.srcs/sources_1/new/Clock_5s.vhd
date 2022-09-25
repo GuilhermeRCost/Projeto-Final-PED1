@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company:  UnB -FGA
+-- Engineer: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
 -- 
 -- Create Date: 20.09.2022 11:57:51
 -- Design Name: 
@@ -39,16 +39,21 @@ entity Clock_5s is
 end Clock_5s;
 
 architecture Behavioral of Clock_5s is
-    signal prescaler : integer range 0 to 250_000_000 := 250_000_000; 
-    signal counter : integer range 1 to 250_000_000 := 1; 
-    signal newClock : std_logic := '0'; 
+    signal prescaler : integer range 0 to 400_000_000 := 500_000_000; 
+    signal counter : integer range 1 to 400_000_000 := 1; 
+    signal newClock, sRst : std_logic := '0'; 
 begin
+    resetando: process(rst)
+    begin
+       srst <= rst;
+    end process ;
     clkDivisor : process(clk_in) 
           begin 
               if rising_edge(clk_in) then
-                  if rst ='1' then
+                  if srst ='1' then
                      newClock <= '0';
                      counter <= 1; 
+                     ts <= '1';
                   elsif counter = prescaler then 
                       counter <= 1; 
                       newClock <= not newClock; 

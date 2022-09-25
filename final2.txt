@@ -1,0 +1,68 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity semaforo is
+    Port (  SG : OUT BIT;                        -- Side green SG=1 VS=1 TL=1
+            MG : OUT BIT;                        -- Main green MG=1 VS=0 TL=1
+            SY : OUT BIT;                        -- Side yellow SY=1 TS=1
+            MY : OUT BIT;                        -- Main yellow MY=1 TS=1
+            VS : IN BIT;                        -- Side sensor (Tem carro na rua lateral)
+            TL : IN BIT;                        -- Long timer 25s
+            TS : IN BIT;                        -- Short timer 4s
+            Q  : OUT BIT_VECTOR(1 DOWNTON 0));  -- Armazena o estado
+end semaforo;
+
+ARCHITECTURE Behavioral of semaforo is
+    TYPE state IS (first_state, second_state, third_state, forth_state); -- 00, 01, 11, 10
+    SIGNAL signal_state: state := first_state;
+
+BEGIN passagem_tempo : PROCESS(TL, TS)
+    BEGIN
+        IF(rising_edge(TL)) THEN 
+            CASE signal_state IS
+                WHEN first_state =>
+                    IF(VS = '1') THEN                   -- Carro na rua lateral
+                        signal_state <= second_state; 
+                    END IF;
+                    MG <= 1;                            -- Luz verde na principal
+                WHEN third_state =>
+                    IF(VS = '0') THEN                   --Sem carro na lateral
+                        signal_state <= forth_state;
+                    END IF;
+                    SG <= '1';                          --Luz verde na lateral
+            END CASE;
+        ELSIF(rising_edge(TS)) THEN
+            CASE signal_state IS
+                WHEN second_state =>
+                    MG <= '0';
+                    MY <= '1';                          -- Luz amarela na principal
+                    IF(VS = '1')                        -- Carro na rua lateral
+                        THEN signal_state <= third_state; 
+                    END IF;
+                WHEN forth_state =>
+                    SG <= '0';
+                    SY <= '1';                          --Luz amarela na lateral
+                    IF(VS = '0') THEN                   --Sem carro na rua lateral
+                        signal_state <= first_state;
+                    END IF;
+            END CASE;
+        END IF;
+END PROCESS passagem_tempo;
+
+    WITH state SELECT 
+        Q <= "00" WHEN first_state,
+            "01" WHEN second_state,
+            "11" WHEN third_state,
+            "10" WHEN forth_state;
+END Behavioral;
+
+/*
+(1) Selecionar o estado pela mudança da ordem do tempo
+    Ordem do tempo e ordem do sensor
+    A ordem do tempo é governada por TL
+    A ordem do sensor é governada por VS
+        Sob a ordem do tempo:
+        (a) VS=0 => MG=1 TL=1 <=> SG=0 TS=0
+        (b) VS=1 => SG=1 TL=1 <=> MG=0 TS=0
+(2) Atribuir valor ao estado
+*/

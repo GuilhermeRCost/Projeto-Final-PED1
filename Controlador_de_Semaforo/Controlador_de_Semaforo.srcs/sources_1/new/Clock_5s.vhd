@@ -39,7 +39,7 @@ entity Clock_5s is
 end Clock_5s;
 
 architecture Behavioral of Clock_5s is
-    signal prescaler : integer range 0 to 400_000_000 := 500_000_000; 
+    signal prescaler : integer range 0 to 400_000_000 := 400_000_000; 
     signal counter : integer range 1 to 400_000_000 := 1; 
     signal newClock, sRst : std_logic := '0'; 
 begin

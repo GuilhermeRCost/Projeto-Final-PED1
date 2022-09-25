@@ -2,8 +2,8 @@
 # Vivado v2017.4 (64-bit)
 # SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
 # IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Sat Sep 24 17:07:34 2022
-# Process ID: 5568
+# Start of session at: Sun Sep 25 15:45:29 2022
+# Process ID: 19388
 # Current directory: C:/Users/AC Tecnologia/Documents/Trabalho Final PED1/Controlador_de_Semaforo/Controlador_de_Semaforo.runs/impl_1
 # Command line: vivado.exe -log controladorSemaforo.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source controladorSemaforo.tcl -notrace
 # Log file: C:/Users/AC Tecnologia/Documents/Trabalho Final PED1/Controlador_de_Semaforo/Controlador_de_Semaforo.runs/impl_1/controladorSemaforo.vdi

@@ -33,6 +33,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Clock_25s is
     Port ( CLK_in : in STD_LOGIC;
+           Rst: in std_logic ;
            CLK_out : out STD_LOGIC;
            Tl: out std_logic );
 end Clock_25s;
@@ -45,7 +46,10 @@ begin
     COntagem1 : process(clk_in) 
           begin 
               if rising_edge(clk_in) then 
-                  if (counter = prescaler) then 
+                   if rst ='1' then
+                      newClock <= '0';
+                      counter <= 1; 
+                   elsif (counter = prescaler) then 
                       counter <= 1; 
                       newClock <= not newClock;
                       tl <='0';

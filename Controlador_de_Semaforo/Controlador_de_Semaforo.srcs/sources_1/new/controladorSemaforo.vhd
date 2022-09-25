@@ -47,12 +47,14 @@ architecture Behavioral of controladorSemaforo is
     --instanciando componentes
     component Clock_25s
         Port ( CLK_in : in STD_LOGIC;
+               Rst: in std_logic ;
                CLK_out : out STD_LOGIC;
                Tl: out std_logic );
     end component ;
     
     component Clock_5s
         Port ( CLK_in : in STD_LOGIC;
+               Rst: in std_logic ;
                CLK_out : out STD_LOGIC;
                Ts: out std_logic );
     end component ;
@@ -67,16 +69,17 @@ architecture Behavioral of controladorSemaforo is
                Mr : out STD_LOGIC;
                Sg : out STD_LOGIC;
                Sy : out STD_LOGIC;
-               Sr : out STD_LOGIC);
+               Sr : out STD_LOGIC;
+               reset: out std_logic );
     end component;
     
     --sinais
-    signal sTs, sTl,clk5,clk25: std_logic ;
+    signal sTs, sTl,clk5,clk25, sRst: std_logic ;
 begin
-    Clock_curto: Clock_5s port map (CLK_in => Clk, CLK_out =>clk5, Ts => sTs);
-    Clock_longo: Clock_25s port map (CLK_in => Clk, CLK_out =>clk25, Tl => sTl);
-    MaquinaEstados: Maquina_de_Estados port map(CLK => clk, tl => sTl, ts => sTs, vS => Vs, 
+    Clock_curto: Clock_5s port map (CLK_in => Clk, Rst => sRst, CLK_out =>clk5, Ts => sTs);
+    Clock_longo: Clock_25s port map (CLK_in => Clk, Rst => sRst, CLK_out =>clk25, Tl => sTl);
+    MaquinaEstados: Maquina_de_Estados port map(CLK => clk5, tl => sTl, ts => sTs, vS => Vs, 
                                                     Mg => Mg, My => My, Mr => Mr, 
-                                                    Sg => Sg, Sy => sy, Sr => Sr);
+                                                    Sg => Sg, Sy => sy, Sr => Sr, reset => sRst);
     Clk_out <= Clk5;
 end Behavioral;

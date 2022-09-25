@@ -41,7 +41,8 @@ entity Maquina_de_Estados is
            Mr : out STD_LOGIC;
            Sg : out STD_LOGIC;
            Sy : out STD_LOGIC;
-           Sr : out STD_LOGIC);
+           Sr : out STD_LOGIC;
+           reset: out std_logic);
 end Maquina_de_Estados;
 
 architecture Behavioral of Maquina_de_Estados is
@@ -91,26 +92,34 @@ begin
                    when e1 => 
                       if (Tl ='1' and Vs ='0')   then --looping
                         nextState <= e1;
+                        reset <= '1';
                       else
+                        reset <= '0';
                         nextState <= e2;
                       end if;
                    when e2 =>
                        if ts ='0' then
+                            reset <= '1';
                             nextState <= e3;
                        else  
+                            reset <= '0';
                             nextState <= e2;   
                        end if;
                         
                    when e3 =>
                       if (Tl ='1' and Vs ='1')   then --looping
+                       reset <= '0';
                        nextState <= e3;
                      else
+                       reset <= '1';
                        nextState <= e4;
                      end if;
                    when e4 =>
                        if tl ='0' then
+                           reset <= '1';
                            nextState <= e1;
-                      else  
+                      else 
+                           reset <= '0'; 
                            nextState <= e4;   
                       end if;  
                    end case;

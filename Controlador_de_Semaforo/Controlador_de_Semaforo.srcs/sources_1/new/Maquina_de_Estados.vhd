@@ -52,7 +52,7 @@ architecture Behavioral of Maquina_de_Estados is
     
     
 begin
-    Mg <= sM(0);
+   Mg <= sM(0);
     My <= sM(1);
     Mr <= sM(2);
     
@@ -86,7 +86,7 @@ begin
                end if;  
         end process;
         
-         transicao_estado: process(cstate, Vs, tl)
+         transicao_estado: process(cstate, Vs, tl,ts)
               begin
                   case cstate is
                    when e1 => 

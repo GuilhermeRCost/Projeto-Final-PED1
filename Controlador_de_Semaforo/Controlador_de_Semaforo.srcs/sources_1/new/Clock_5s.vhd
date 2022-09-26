@@ -42,29 +42,31 @@ architecture Behavioral of Clock_5s is
     signal prescaler : integer range 0 to 400_000_000 := 400_000_000; 
     signal counter : integer range 1 to 400_000_000 := 1; 
     signal newClock, sRst : std_logic := '0'; 
+    signal sts: std_logic := '1';
 begin
-    resetando: process(rst)
-    begin
-       srst <= rst;
-    end process ;
-    clkDivisor : process(clk_in) 
-          begin 
-              if rising_edge(clk_in) then
-                  if srst ='1' then
-                     newClock <= '0';
-                     counter <= 1; 
-                     ts <= '1';
-                  elsif counter = prescaler then 
-                      counter <= 1; 
-                      newClock <= not newClock; 
-                      Ts <= '0';
-                  else 
-                      Ts <= '1';
-                      counter <= counter + 1; 
-                  end if; 
-              end if; 
-          end process; 
-   
-      clk_out <= newClock; 
+      ts <= sts;
+  resetando: process(rst)
+  begin
+     srst <= rst;
+  end process ;
+  clkDivisor : process(clk_in) 
+        begin 
+            if rising_edge(clk_in) then
+                if srst ='1' then
+                   newClock <= '0';
+                   counter <= 1; 
+                   sts <= '1';
+                elsif counter = prescaler then 
+                    counter <= 1; 
+                    newClock <= not newClock; 
+                    sTs <= '0';
+                else 
+                    sTs <= '1';
+                    counter <= counter + 1; 
+                end if; 
+            end if; 
+        end process; 
+ 
+    clk_out <= newClock; 
 
 end Behavioral;

@@ -42,35 +42,38 @@ architecture Behavioral of Clock_25s is
     signal prescaler : integer range 0 to 1250_000_000 := 1250_000_000; 
     signal counter, counter2 : integer range 1 to 1250_000_000 := 1; 
     signal newClock, srst : std_logic := '0'; 
+    signal stl: std_logic := '1';
 begin
-    resetando: process(rst)
-    begin
-       srst <= rst;
-    end process ;
-    
-    COntagem1 : process(clk_in) 
-          begin 
-              if rising_edge(clk_in) then 
-                   if srst ='1' then
-                      newClock <= '0';
-                      counter <= 1; 
-                      counter2 <= 1;
-                      Tl <= '1';
-                   elsif not(counter = prescaler) then 
-                      counter <= counter +1;
-                      tl <= '1';
-                  elsif counter2 = prescaler then 
-                        Counter <= 1; 
-                        Counter2 <= 1; 
-                        newClock <= not newClock;
-                        Tl <='0';
-                  else
-                        counter2 <= counter2 +1;
-                        tl <= '1';
-                  end if; 
-              end if; 
-          end process;
+    tl <= stl;
+   resetando: process(rst)
+   begin
+      srst <= rst;
+   end process ;
    
-      clk_out <= newClock; 
+   COntagem1 : process(clk_in) 
+         begin 
+             if rising_edge(clk_in) then 
+                  if srst ='1' then
+                     newClock <= '0';
+                     counter <= 1; 
+                     counter2 <= 1;
+                     sTl <= '1';
+                  elsif not(counter = prescaler) then 
+                     counter <= counter +1;
+                     stl <= '1';
+                 elsif counter2 = prescaler then 
+                       Counter <= 1; 
+                       Counter2 <= 1; 
+                       newClock <= not newClock;
+                       sTl <='0';
+                 else
+                       counter2 <= counter2 +1;
+                       stl <= '1';
+                 end if; 
+             end if; 
+         end process;
+  
+     clk_out <= newClock; 
+
 
 end Behavioral;

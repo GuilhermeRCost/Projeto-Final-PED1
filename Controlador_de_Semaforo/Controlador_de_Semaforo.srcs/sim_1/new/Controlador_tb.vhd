@@ -64,7 +64,8 @@ begin
     sensor: process
     begin
         sVs <= '0'; wait for 30ns;
-        sVs <= '1'; wait;
+        sVs <= '1'; wait for 2_000ns;
+        sVs <= '0'; wait;
     end process;
 
 end Behavioral;

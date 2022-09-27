@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../Controlador_de_Semaforo.srcs/sources_1/new/Maquina_de_Estados.vhd" \
+"../../../../Controlador_de_Semaforo.srcs/sim_1/new/Estados_tb.vhd" \
+
+# Do not sort compile order
+nosort

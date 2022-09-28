@@ -1,9 +1,9 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
 -- 
 -- Create Date: 14.09.2022 14:05:56
--- Design Name: Guilherme Rodrigues , Pedro Lucas Garcia, Ana Beatriz Norberto
+-- Design Name: 
 -- Module Name: Maquina_de_Estados - Behavioral
 -- Project Name: 
 -- Target Devices: 

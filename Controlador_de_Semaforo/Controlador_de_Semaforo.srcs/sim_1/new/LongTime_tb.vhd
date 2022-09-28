@@ -48,8 +48,15 @@ begin
     
     estimulo: process
     begin
-        sclkin <= '0'; srst <='0'; wait for 10ns;
-        sclkin <= '1'; wait for 5ns;
-        srst <= '1'; wait for 5ns;
+        sclkin <= '0';  wait for 1ns;
+        sclkin <= '1'; wait for 1ns;
     end process;
+    
+    Reset: process
+    Begin
+        srst <= '0'; wait for 3_000_000ns;
+        srst <= '1'; wait for 1ns; srst <= '0'; wait;
+    end process;
+    
+    
 end Behavioral;
